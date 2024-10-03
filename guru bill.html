@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Printing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 10%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .btn-print {
+            background-color: #007bff;
+            margin-top: 20px;
+        }
+
+        .btn-print:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>invoice bill</h1>
+    <h2>RONSREX PRIVATE LTD.</h2>
+   <p>shop no.1 to 5,<br>
+Central park,<br>
+nsp(E),palghar,<br>
+PINCOD:400004,<br>
+CONTACT NO.9876987600/9000087645</p>
+
+    <!-- Form for entering bill details -->
+    <div class="form-group">
+        <label for="item-name">Item Name:</label>
+        <tr>
+                     <td><select name="item" id="item-name" placeholder="Enter item name">  
+                        <option value="SOAP (4pc)">SOAP(4pc)</option>
+                        <option value="SUGAR (1kg) ">SUGAR(1kg)</option>
+                        <option value="MADIA (1kg)">MADIA(1kg)</option>
+                        <option value="AATA (1kg)">AATA(1kg)</option>
+                    </select></td>
+    </div>
+    <div class="form-group">
+        <label for="item-quantity">Quantity:</label>
+        <td><select name="number"id="item-quantity" placeholder="Enter quantity" readonly >
+            <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        </select>
+    
+        </td>    
+                </div>
+    <div class="form-group">
+        <label for="item-price">Price per Unit:</label>
+        <input type="number" min="50" max="2000"id="item-price" placeholder="Enter price per unit">
+    </div>
+    <button class="btn" onclick="addItem()">Add Item</button>
+
+    <!-- Table to display bill -->
+    <table id="bill-table">
+        <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Quantity</th>
+            <th>Price per Unit</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody id="bill-body">
+        </tbody>
+    </table>
+
+    <!-- Total Bill Amount -->
+    <div class="form-group">
+        <h2>Total: ₹<span id="total-amount">0</span></h2>
+    </div>
+
+    <!-- Button to print the bill -->
+    <button class="btn btn-print" onclick="printBill()">Print Bill</button>
+</div>
+
+<script>
+    let totalAmount = 0;
+
+    // Function to add an item to the bill
+    function addItem() {
+        const itemName = document.getElementById('item-name').value;
+        const itemQuantity = parseFloat(document.getElementById('item-quantity').value);
+        const itemPrice = parseFloat(document.getElementById('item-price').value);
+
+        if (itemName && itemQuantity > 0 && itemPrice > 0) {
+            const itemTotal = itemQuantity * itemPrice;
+
+            // Add item to table
+            const tableBody = document.getElementById('bill-body');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${itemName}</td>
+                <td>${itemQuantity}</td>
+                <td>₹${itemPrice.toFixed(2)}</td>
+                <td>₹${itemTotal.toFixed(2)}</td>
+            `;
+            tableBody.appendChild(row);
+
+            // Update total amount
+            totalAmount += itemTotal;
+            document.getElementById('total-amount').textContent = totalAmount.toFixed(2);
+
+            // Clear input fields
+            document.getElementById('item-name').value = '';
+            document.getElementById('item-quantity').value = '';
+            document.getElementById('item-price').value = '';
+        } else {
+            alert('Please fill all fields correctly');
+        }
+    }
+
+    // Function to print the bill
+    function printBill() {
+        const printContents = document.querySelector('.container').innerHTML;
+        const originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        location.reload(); // Reload the page to restore the form
+    }
+</script>
+
+</body>
+</html>
